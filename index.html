@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Command Center</title>
+    <style>
+        body { background: #050505; color: #00f2fe; font-family: 'Courier New', monospace; text-align: center; }
+        .dashboard-container { display: flex; justify-content: center; gap: 20px; padding: 20px; }
+        .video-box { border: 2px solid #00f2fe; box-shadow: 0 0 20px #00f2fe; }
+        .stats-panel { border: 2px solid #00f2fe; padding: 20px; width: 300px; text-align: left; }
+        .critical { color: #ff4b2b; border-color: #ff4b2b; box-shadow: 0 0 20px #ff4b2b; }
+        #log-container { height: 200px; overflow-y: hidden; font-size: 12px; }
+        .danger-alert { color: #ff4b2b; font-weight: bold; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <h1 class="system-title">CRIME-DETECTION SYSTEM V2.0</h1>
+    
+    <div class="dashboard-container">
+        <div class="video-box" id="vid-border">
+            <img src="{{ url_for('video_feed') }}" width="700">
+        </div>
+
+        <div class="stats-panel" id="stat-border">
+            <h3>SYSTEM STATUS</h3>
+            <p>ENGINE: <span id="sys-status">INITIALIZING</span></p>
+            <p>OBJECTS DETECTED: <span id="obj-count" style="font-size: 24px;">0</span></p>
+            <hr>
+            <h4>INCIDENT LOGS</h4>
+            <div id="log-container"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateDashboard() {
+            fetch('/get_status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update Count
+                    document.getElementById('obj-count').innerText = data.count;
+                    
+                    // Update Status
+                    const statusEl = document.getElementById('sys-status');
+                    statusEl.innerText = data.status;
+
+                    if (data.status === "CRITICAL") {
+                        statusEl.className = "danger-alert";
+                        document.getElementById('vid-border').style.borderColor = "#ff4b2b";
+                        addLog("🚨 WEAPON DETECTED!");
+                    } else {
+                        statusEl.className = "";
+                        document.getElementById('vid-border').style.borderColor = "#00f2fe";
+                    }
+                });
+        }
+
+        function addLog(msg) {
+            const container = document.getElementById('log-container');
+            const time = new Date().toLocaleTimeString();
+            container.innerHTML = `<div>[${time}] ${msg}</div>` + container.innerHTML;
+        }
+
+        setInterval(updateDashboard, 1000); // Har 1 sec mein update
+    </script>
+</body>
+</html>

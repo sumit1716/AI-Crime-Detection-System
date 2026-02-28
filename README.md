@@ -1,2 +1,11 @@
-# AI-Crime-Detection-System
-This project is a high-performance, real-time surveillance system designed to enhance public safety by automatically detecting potential threats. Leveraging the YOLOv8 (You Only Look Once) deep learning architecture and a Flask-based web dashboard, the system identifies weapons like pistols and knives in live video feeds with high accuracy.
+# AI Crime Detection System V2.0
+Real-time weapon detection (Pistol & Knife) using YOLOv8 and Flask.
+
+## Features
+- Custom Trained YOLOv8 Nano model.
+- Real-time Cyber Dashboard.
+- Automatic Evidence capture in `incidents/` folder.
+
+## Setup
+1. Install requirements: `pip install -r requirements.txt`
+2. Run app: `python app.py`
